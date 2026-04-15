@@ -24,12 +24,13 @@ export type UpsertSessionInput = {
   title: string | null;
   scheduled_start: Date;
   scheduled_end: Date | null;
+  invited_user_ids: string[];
 };
 
 /**
  * Upsert a session by calendar_event_id. Returns the session row.
- * On conflict, keeps the existing shortcode + title (caller can Update
- * title separately if needed).
+ * On conflict, keeps the existing shortcode and refreshes scheduled
+ * times + invited_user_ids (attendees may have joined/declined).
  */
 export async function upsertSession(
   input: UpsertSessionInput,
@@ -39,36 +40,32 @@ export async function upsertSession(
   >`SELECT id, shortcode FROM sessions WHERE calendar_event_id = ${input.calendar_event_id} LIMIT 1`;
 
   if (existing.length > 0) {
-    // Update scheduled_start/end in case the event was rescheduled.
     await sql`
       UPDATE sessions
       SET scheduled_start = ${input.scheduled_start},
           scheduled_end = ${input.scheduled_end},
-          title = COALESCE(${input.title}, title)
+          title = COALESCE(${input.title}, title),
+          invited_user_ids = ${input.invited_user_ids as unknown as string}::uuid[]
       WHERE id = ${existing[0].id}
     `;
     return { id: existing[0].id, shortcode: existing[0].shortcode, is_new: false };
   }
 
-  // Collision-safe insert: try up to 10 shortcodes
+  // Collision-safe insert
   for (let attempt = 0; attempt < 10; attempt++) {
     const shortcode = generateShortcode();
     try {
       const rows = await sql<
         Array<{ id: string; shortcode: string }>
       >`
-        INSERT INTO sessions (shortcode, calendar_event_id, title, scheduled_start, scheduled_end)
-        VALUES (${shortcode}, ${input.calendar_event_id}, ${input.title}, ${input.scheduled_start}, ${input.scheduled_end})
+        INSERT INTO sessions (shortcode, calendar_event_id, title, scheduled_start, scheduled_end, invited_user_ids)
+        VALUES (${shortcode}, ${input.calendar_event_id}, ${input.title}, ${input.scheduled_start}, ${input.scheduled_end}, ${input.invited_user_ids as unknown as string}::uuid[])
         RETURNING id, shortcode
       `;
       return { id: rows[0].id, shortcode: rows[0].shortcode, is_new: true };
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : String(err);
-      // Unique constraint violation on either shortcode or calendar_event_id
       if (!message.includes("duplicate key")) throw err;
-      // Retry: either shortcode clash (unlikely 1 in 1M for 4 chars) OR
-      // another cron instance just won the race on calendar_event_id.
-      // Re-run SELECT to grab the existing row.
       const raceRow = await sql<
         Array<{ id: string; shortcode: string }>
       >`SELECT id, shortcode FROM sessions WHERE calendar_event_id = ${input.calendar_event_id} LIMIT 1`;

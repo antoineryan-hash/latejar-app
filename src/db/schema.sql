@@ -54,6 +54,10 @@ CREATE TABLE IF NOT EXISTS sessions (
 CREATE INDEX IF NOT EXISTS sessions_scheduled_start_idx ON sessions (scheduled_start);
 CREATE INDEX IF NOT EXISTS sessions_closed_at_idx ON sessions (closed_at);
 
+-- Later additions (idempotent). Keeps forward-migration on live data safe.
+ALTER TABLE sessions
+  ADD COLUMN IF NOT EXISTS invited_user_ids UUID[] NOT NULL DEFAULT '{}';
+
 -- arrivals: one row per (user_or_guest, session) pair
 CREATE TABLE IF NOT EXISTS arrivals (
   id             UUID PRIMARY KEY DEFAULT gen_random_uuid(),

@@ -44,6 +44,7 @@ export async function POST(req: Request) {
   `;
 
   const memberEmails = new Set(users.map((u) => u.email.toLowerCase()));
+  const emailToUserId = new Map(users.map((u) => [u.email.toLowerCase(), u.id]));
 
   const summary = {
     users_polled: 0,
@@ -92,11 +93,16 @@ export async function POST(req: Request) {
       const end = ev.end?.dateTime ? new Date(ev.end.dateTime) : null;
 
       try {
+        const invited_user_ids = membersAttending
+          .map((email) => emailToUserId.get(email))
+          .filter((id): id is string => Boolean(id));
+
         const res = await upsertSession({
           calendar_event_id: ev.id,
           title: ev.summary ?? null,
           scheduled_start: start,
           scheduled_end: end,
+          invited_user_ids,
         });
         if (res.is_new) summary.sessions_created += 1;
         else summary.sessions_updated += 1;
