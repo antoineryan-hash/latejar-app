@@ -1,10 +1,10 @@
 export const HERO = {
-  eyebrow: "Live now — UpScale is customer zero",
+  eyebrow: "Live now — free to sign up",
   headline: "Late jar for meetings.",
   headlineAccent: "Auto-donates to the cause your team picks.",
   subhead:
-    "We track your team's calendar and Meet attendance, calculate $1 per minute late, and route it to your chosen charity automatically. We take 10% to keep the lights on. You stop being late.",
-  primaryCta: "Get early access",
+    "We track your team's calendar and Meet attendance, calculate $1 per minute late, and route it to your chosen charity automatically. Free forever for Trackers; upgrade to Donator any time to turn lateness into donations.",
+  primaryCta: "Sign in with Google",
   secondaryCta: "See our live jar",
 };
 
