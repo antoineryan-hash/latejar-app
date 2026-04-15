@@ -1,11 +1,25 @@
+import { Hero } from "@/components/sections/Hero";
+import { HowItWorks } from "@/components/sections/HowItWorks";
+import { LiveJar } from "@/components/sections/LiveJar";
+import { FounderNote } from "@/components/sections/FounderNote";
+import { Charity } from "@/components/sections/Charity";
+import { Waitlist } from "@/components/sections/Waitlist";
+import { FAQ } from "@/components/sections/FAQ";
+import { Footer } from "@/components/sections/Footer";
+
 export default function Home() {
   return (
-    <main className="flex-1 flex items-center justify-center p-8">
-      <div>
-        <p className="text-xs uppercase tracking-widest text-fg-muted">Coming May 2026</p>
-        <h1 className="mt-2 text-3xl font-bold">Late Jar</h1>
-        <p className="mt-2 text-fg-muted">Under construction.</p>
-      </div>
-    </main>
+    <>
+      <main className="flex-1">
+        <Hero />
+        <HowItWorks />
+        <LiveJar />
+        <FounderNote />
+        <Charity />
+        <Waitlist />
+        <FAQ />
+      </main>
+      <Footer />
+    </>
   );
 }

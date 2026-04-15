@@ -44,3 +44,7 @@ coverage/
 # playwright
 playwright-report/
 test-results/
+
+# playwright screenshots from local QA
+.playwright-mcp/
+latejar-*.png
