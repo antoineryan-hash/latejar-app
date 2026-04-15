@@ -1,0 +1,45 @@
+import type { Metadata } from "next";
+import { Inter, JetBrains_Mono } from "next/font/google";
+import "./globals.css";
+
+const interBody = Inter({
+  variable: "--font-body-var",
+  subsets: ["latin"],
+  display: "swap",
+});
+
+const interDisplay = Inter({
+  variable: "--font-display-var",
+  subsets: ["latin"],
+  weight: ["600", "700", "800"],
+  display: "swap",
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  variable: "--font-mono-var",
+  subsets: ["latin"],
+  display: "swap",
+});
+
+export const metadata: Metadata = {
+  metadataBase: new URL("https://latejar.app"),
+  title: {
+    default: "Late Jar — meeting tardiness, donated to charity",
+    template: "%s · Late Jar",
+  },
+  description:
+    "We track your team's calendar and Meet attendance, calculate $1 per minute late, and route it to your chosen charity automatically.",
+};
+
+export default function RootLayout({
+  children,
+}: Readonly<{ children: React.ReactNode }>) {
+  return (
+    <html
+      lang="en"
+      className={`${interBody.variable} ${interDisplay.variable} ${jetbrainsMono.variable}`}
+    >
+      <body className="min-h-screen flex flex-col bg-bg text-fg">{children}</body>
+    </html>
+  );
+}

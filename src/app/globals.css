@@ -1,0 +1,63 @@
+@import "tailwindcss";
+
+@theme {
+  /* surfaces */
+  --color-bg: #0a0a0b;
+  --color-surface: #17171a;
+  --color-surface-2: #1f1f23;
+  --color-border: #27272a;
+
+  /* text */
+  --color-fg: #fafafa;
+  --color-fg-muted: #a1a1aa;
+  --color-fg-dim: #71717a;
+
+  /* accents */
+  --color-late: #ef4444;
+  --color-late-soft: #fca5a5;
+  --color-late-deep: #b91c1c;
+  --color-raised: #22c55e;
+  --color-raised-soft: #86efac;
+  --color-warn: #f59e0b;
+
+  /* fonts */
+  --font-display: var(--font-display-var), "Inter", system-ui, sans-serif;
+  --font-body: var(--font-body-var), "Inter", system-ui, sans-serif;
+  --font-mono: var(--font-mono-var), "JetBrains Mono", ui-monospace, monospace;
+
+  /* radius */
+  --radius-xl: 1rem;
+  --radius-2xl: 1.25rem;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color-scheme: dark;
+}
+
+body {
+  background: var(--color-bg);
+  color: var(--color-fg);
+  font-family: var(--font-body);
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.mono {
+  font-family: var(--font-mono);
+  font-feature-settings: "tnum" 1, "cv11" 1;
+}
+
+::selection {
+  background: var(--color-late);
+  color: var(--color-fg);
+}
