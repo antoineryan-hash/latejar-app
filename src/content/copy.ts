@@ -1,10 +1,10 @@
 export const HERO = {
-  eyebrow: "Coming May 2026",
+  eyebrow: "Live now — UpScale is customer zero",
   headline: "Late jar for meetings.",
   headlineAccent: "Auto-donates to the cause your team picks.",
   subhead:
     "We track your team's calendar and Meet attendance, calculate $1 per minute late, and route it to your chosen charity automatically. We take 10% to keep the lights on. You stop being late.",
-  primaryCta: "Join the waitlist",
+  primaryCta: "Get early access",
   secondaryCta: "See our live jar",
 };
 
@@ -43,12 +43,12 @@ export const CHARITY = {
 };
 
 export const WAITLIST = {
-  heading: "Join the waitlist",
-  body: "We're opening up to the first ~10 teams in June 2026. Tell us who you are and we'll email you when your spot opens.",
+  heading: "Get early access",
+  body: "We're rolling out to the first handful of teams now. Drop your email and team name — we'll set you up personally so we can iron out the rough edges with you.",
   placeholderEmail: "you@team.com",
   placeholderWorkspace: "Team name (optional)",
-  submitLabel: "Get early access",
-  successMessage: "You're on the list. We'll be in touch.",
+  submitLabel: "Sign me up",
+  successMessage: "You're in. We'll be in touch within a day or two.",
   errorMessage: "Something broke. Email hello@latejar.app instead.",
 };
 
@@ -58,5 +58,5 @@ export const LIVE_JAR = {
     `Since we flipped this on ${date}, the UpScale team has been late ${minutes} minutes this month and forfeited $${dollars} to TIACS. Updated daily.`,
   leaderboardTitle: "Top culprits this month",
   emptyState:
-    "The jar is fresh. Check back once we've run a few standups — we'll be late within a week.",
+    "The jar is freshly poured. We're warming up — check back in a few days, someone's bound to be late.",
 };

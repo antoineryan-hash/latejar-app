@@ -15,17 +15,17 @@ export default function PrivacyPage() {
         >
           ← Back
         </Link>
-        <h1 className="mt-6 text-3xl md:text-4xl">Privacy policy (waitlist)</h1>
+        <h1 className="mt-6 text-3xl md:text-4xl">Privacy policy (early access)</h1>
         <p className="mono mt-2 text-sm text-fg-dim">Last updated: 15 April 2026</p>
 
         <p className="mt-6 text-fg-muted">
-          This policy covers{" "}
-          <span className="text-fg">latejar.app</span> <strong>before the product launches</strong>.
-          A separate, fuller policy will apply to the app itself once live.
+          This policy covers <span className="text-fg">latejar.app</span> during the early-access
+          phase. A separate, fuller policy will apply to the production app once we onboard
+          customers beyond UpScale.
         </p>
 
         <h2 className="mt-10 text-2xl">What we collect</h2>
-        <p className="mt-3 text-fg-muted">When you join the waitlist:</p>
+        <p className="mt-3 text-fg-muted">When you sign up for early access:</p>
         <ul className="mt-2 list-disc space-y-1 pl-6 text-fg-muted">
           <li>Your email address</li>
           <li>Optional: workspace name, team size, role</li>
