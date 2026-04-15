@@ -223,21 +223,28 @@ git commit -m "feat: bootstrap Next.js 14 app"
 - Create: `components.json` (via shadcn init)
 - Create: `src/components/ui/button.tsx`, `src/components/ui/input.tsx`, `src/components/ui/accordion.tsx` (via shadcn add)
 
-**Step 1: Configure fonts in `src/app/layout.tsx`**
+**Step 1: Configure fonts in `src/app/layout.tsx`** — Inter for both display and body (bahn.bet-style clean sans), JetBrains Mono for numbers.
 
 ```tsx
 import type { Metadata } from "next";
-import { Space_Grotesk, Inter, JetBrains_Mono } from "next/font/google";
+import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 
-const spaceGrotesk = Space_Grotesk({
+const inter = Inter({
+  variable: "--font-body",
+  subsets: ["latin"],
+  display: "swap",
+});
+const interDisplay = Inter({
   variable: "--font-display",
   subsets: ["latin"],
+  weight: ["600", "700", "800"],
+  display: "swap",
 });
-const inter = Inter({ variable: "--font-body", subsets: ["latin"] });
 const jetbrainsMono = JetBrains_Mono({
   variable: "--font-mono",
   subsets: ["latin"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -252,32 +259,49 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${spaceGrotesk.variable} ${inter.variable} ${jetbrainsMono.variable}`}>
-      <body className="font-body antialiased bg-cream text-charcoal">{children}</body>
+    <html
+      lang="en"
+      className={`${inter.variable} ${interDisplay.variable} ${jetbrainsMono.variable}`}
+    >
+      <body className="font-body antialiased bg-bg text-fg">{children}</body>
     </html>
   );
 }
 ```
 
-**Step 2: Configure brand palette in `tailwind.config.ts`**
+**Note on later code blocks in this plan:** component examples in Tasks 4-10 were drafted with the original warm palette (`bg-cream`, `text-charcoal`, `border-amber/*`). When implementing, substitute with the dark-theme tokens: `bg-bg`, `bg-surface`, `text-fg`, `text-fg-muted`, `border-border`, `bg-late`, `text-raised`, etc. The code is illustrative; the Tailwind config above is the source of truth for tokens.
+
+**Step 2: Configure brand palette in `tailwind.config.ts`** — **dark theme, bahn.bet-inspired**
 
 ```ts
 import type { Config } from "tailwindcss";
 
 export default {
+  darkMode: "class",
   content: ["./src/**/*.{ts,tsx,mdx}"],
   theme: {
     extend: {
       colors: {
-        amber: { DEFAULT: "#F59E0B", soft: "#FCD34D", deep: "#B45309" },
-        cream: "#FDFBF5",
-        charcoal: { DEFAULT: "#1A1A1A", soft: "#404040" },
-        success: "#16A34A",
+        // surfaces
+        bg: "#0A0A0B",          // near-black page background
+        surface: "#17171A",     // card background
+        "surface-2": "#1F1F23", // elevated
+        border: "#27272A",      // subtle dividers
+
+        // text
+        fg: "#FAFAFA",
+        "fg-muted": "#A1A1AA",
+        "fg-dim": "#71717A",
+
+        // accents
+        late: { DEFAULT: "#EF4444", soft: "#FCA5A5", deep: "#B91C1C" }, // red for lateness + CTAs
+        raised: { DEFAULT: "#22C55E", soft: "#86EFAC" },                // green for $ raised
+        warn: "#F59E0B",
       },
       fontFamily: {
-        display: ["var(--font-display)", "sans-serif"],
-        body: ["var(--font-body)", "sans-serif"],
-        mono: ["var(--font-mono)", "monospace"],
+        display: ["var(--font-display)", "system-ui", "sans-serif"],
+        body: ["var(--font-body)", "system-ui", "sans-serif"],
+        mono: ["var(--font-mono)", "ui-monospace", "monospace"],
       },
       maxWidth: {
         prose: "65ch",
@@ -297,21 +321,33 @@ export default {
 
 @layer base {
   :root {
-    --background: 45 67% 98%; /* cream */
-    --foreground: 0 0% 10%;   /* charcoal */
+    --background: 240 5% 4%;    /* bg */
+    --foreground: 0 0% 98%;     /* fg */
+    --card: 240 6% 10%;         /* surface */
+    --card-foreground: 0 0% 98%;
+    --border: 240 4% 16%;
+    --input: 240 4% 16%;
+    --ring: 0 84% 60%;          /* late / red */
+    --radius: 0.75rem;
   }
   html {
     scroll-behavior: smooth;
     -webkit-font-smoothing: antialiased;
   }
   body {
-    background: hsl(var(--background));
-    color: hsl(var(--foreground));
+    background: #0A0A0B;
+    color: #FAFAFA;
   }
-  h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 700; letter-spacing: -0.02em; }
-  .mono { font-family: var(--font-mono); }
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+  .mono { font-family: var(--font-mono); font-feature-settings: "tnum"; }
 }
 ```
+
+**Brand rationale (inspired by bahn.bet):** dark theme makes data (times, dollar amounts) feel "live/alive"; the conceptual parallel to betting-on-train-delays is intentional. Red signals "late/alert/CTA" consistently; green flags "money raised for good". All numbers render in mono with tabular figures (`tnum`) so they don't visually jitter when updating.
 
 **Step 4: Initialize shadcn/ui**
 
