@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
-import Script from "next/script";
 import "./globals.css";
 
 const interBody = Inter({
@@ -51,7 +50,9 @@ export const metadata: Metadata = {
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  const cfToken = process.env.NEXT_PUBLIC_CLOUDFLARE_ANALYTICS_TOKEN;
+  // NOTE: Cloudflare Web Analytics beacon is injected automatically at the
+  // edge proxy (RUM "Enable — auto-inject" setting in CF dashboard). No
+  // <Script> tag needed here. Works once the domain is proxied through CF.
   return (
     <html
       lang="en"
@@ -59,13 +60,6 @@ export default function RootLayout({
     >
       <body className="min-h-screen flex flex-col bg-bg text-fg">
         {children}
-        {cfToken && (
-          <Script
-            src="https://static.cloudflareinsights.com/beacon.min.js"
-            strategy="afterInteractive"
-            data-cf-beacon={`{"token": "${cfToken}"}`}
-          />
-        )}
       </body>
     </html>
   );
