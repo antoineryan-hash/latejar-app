@@ -54,6 +54,7 @@ export type CurrentUser = {
   timezone: string;
   charity_choice: string | null;
   nudge_cadence: "2d" | "1w" | "never";
+  monthly_tally_enabled: boolean;
 };
 
 /** Look up the current user from the session cookie. Returns null if signed out. */
@@ -63,7 +64,8 @@ export async function getCurrentUser(): Promise<CurrentUser | null> {
   if (!token) return null;
 
   const rows = await sql<CurrentUser[]>`
-    SELECT u.id, u.email, u.display_name, u.tier, u.timezone, u.charity_choice, u.nudge_cadence
+    SELECT u.id, u.email, u.display_name, u.tier, u.timezone, u.charity_choice,
+           u.nudge_cadence, u.monthly_tally_enabled
     FROM user_sessions s
     JOIN users u ON u.id = s.user_id
     WHERE s.token_hash = ${hash(token)}
