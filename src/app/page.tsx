@@ -7,6 +7,10 @@ import { Waitlist } from "@/components/sections/Waitlist";
 import { FAQ } from "@/components/sections/FAQ";
 import { Footer } from "@/components/sections/Footer";
 
+// LiveJar queries Postgres for the "we eat our own cooking" numbers;
+// cache the page for 5 minutes so landing hits hit edge, not DB.
+export const revalidate = 300;
+
 export default function Home() {
   return (
     <>
