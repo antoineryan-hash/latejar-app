@@ -78,6 +78,17 @@ gh secret set CRON_SECRET --body "<same value as Railway>"
 
 Cloudflare Registrar owns `latejar.app`. DNS uses Cloudflare → Railway custom domain (proxied). Cloudflare Web Analytics is auto-injected at the edge (no code).
 
+## Pre-launch checklist
+
+Tick these before May 1 — each is a user action (can't be automated).
+
+- [ ] **Resend domain verification** — Resend dashboard → Domains → Add `latejar.app`. Add the three DNS records (MX + 2x TXT) to Cloudflare DNS. Without this, `hello@latejar.app` emails silently bounce.
+- [ ] **Google OAuth verification** — stays in Testing mode for <100 users. If we hit that ceiling, start the `~4-6 week` verification process at [Cloud Console > APIs > OAuth consent screen > Prepare for verification](https://console.cloud.google.com/apis/credentials/consent).
+- [ ] **Stripe account** — create AU Stripe account. Enable Connect in Test mode. Complete the Account activation form (ABN, trading name, bank account). We're an Australian proprietary company (UpScale) offering a platform that routes donations — disclose this in the Stripe activation form.
+- [ ] **TIACS Stripe Connect onboarding** — reach out to TIACS ops, ask them to connect their Stripe account to our Connect platform (Standard flow). Store their `acct_xxx` as `STRIPE_CHARITY_ACCOUNT_ID` in Railway.
+- [ ] **GitHub Actions workflow scope** — one-time `gh auth refresh -h github.com -s workflow` and approve in browser. Without this, the cron workflow file can't be pushed.
+- [ ] **Hit every cron manually once** — via the smoke tests in the section below. Confirms env vars are right before the first auto-tick.
+
 ## Verifying a deploy
 
 Smoke-test in order:
