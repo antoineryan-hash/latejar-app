@@ -58,6 +58,11 @@ CREATE INDEX IF NOT EXISTS sessions_closed_at_idx ON sessions (closed_at);
 ALTER TABLE sessions
   ADD COLUMN IF NOT EXISTS invited_user_ids UUID[] NOT NULL DEFAULT '{}';
 
+-- Per-nudge opt-outs. Separate from nudge_cadence so a user can keep
+-- upgrade nudges but kill the monthly tally (or vice versa).
+ALTER TABLE users
+  ADD COLUMN IF NOT EXISTS monthly_tally_enabled BOOLEAN NOT NULL DEFAULT true;
+
 -- arrivals: one row per (user_or_guest, session) pair
 CREATE TABLE IF NOT EXISTS arrivals (
   id             UUID PRIMARY KEY DEFAULT gen_random_uuid(),
