@@ -11,6 +11,8 @@ export default async function UpgradePage() {
   if (!user) redirect("/login");
 
   const stripeReady = !!process.env.STRIPE_SECRET_KEY;
+  const publishableKey =
+    process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY ?? null;
 
   if (user.tier === "donator") {
     return (
@@ -103,7 +105,7 @@ export default async function UpgradePage() {
         </div>
 
         <div className="mt-10">
-          <UpgradeCta stripeReady={stripeReady} />
+          <UpgradeCta stripeReady={stripeReady} publishableKey={publishableKey} />
         </div>
 
         <div className="mt-10 border-t border-border pt-6">

@@ -41,6 +41,9 @@ scripts/stats.json
 # test coverage
 coverage/
 
+# TypeScript incremental build info (regenerated locally)
+tsconfig.tsbuildinfo
+
 # playwright
 playwright-report/
 test-results/

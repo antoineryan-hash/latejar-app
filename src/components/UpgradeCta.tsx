@@ -1,10 +1,14 @@
 "use client";
 
 import { useState } from "react";
+import { StripeSetupForm } from "@/components/StripeSetupForm";
 
-type Props = { stripeReady: boolean };
+type Props = {
+  stripeReady: boolean;
+  publishableKey: string | null;
+};
 
-export function UpgradeCta({ stripeReady }: Props) {
+export function UpgradeCta({ stripeReady, publishableKey }: Props) {
   const [state, setState] = useState<"idle" | "loading" | "done" | "error">(
     "idle",
   );
@@ -20,19 +24,12 @@ export function UpgradeCta({ stripeReady }: Props) {
     }
   }
 
-  if (stripeReady) {
-    // Real Stripe SetupIntent flow — lands when STRIPE_SECRET_KEY is set.
-    // For now stubbed; the button keeps its place so swap is one file.
-    return (
-      <button
-        disabled
-        className="mono rounded-lg bg-late px-6 py-3 text-sm font-semibold text-fg opacity-60"
-      >
-        Stripe setup (coming any minute)
-      </button>
-    );
+  // Stripe is wired AND we have a publishable key → real SetupIntent flow.
+  if (stripeReady && publishableKey) {
+    return <StripeSetupForm publishableKey={publishableKey} />;
   }
 
+  // Graceful degrade: capture buyer-intent via Resend audience tag.
   if (state === "done") {
     return (
       <div className="rounded-xl border border-raised/40 bg-raised/10 px-5 py-4 text-sm text-raised">

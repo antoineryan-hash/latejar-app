@@ -63,6 +63,24 @@ ALTER TABLE sessions
 ALTER TABLE users
   ADD COLUMN IF NOT EXISTS monthly_tally_enabled BOOLEAN NOT NULL DEFAULT true;
 
+-- Stripe customer. Created the first time a user starts a SetupIntent;
+-- reused for every subsequent setup + charge. stripe_payment_method_id
+-- already existed but gains meaning once we start off-session charging.
+ALTER TABLE users
+  ADD COLUMN IF NOT EXISTS stripe_customer_id TEXT;
+
+CREATE UNIQUE INDEX IF NOT EXISTS users_stripe_customer_idx
+  ON users (stripe_customer_id)
+  WHERE stripe_customer_id IS NOT NULL;
+
+-- Extend nudges.kind to cover Stripe-related events so we can dedupe
+-- monthly charge sends the same way we dedupe tallies.
+ALTER TABLE nudges
+  DROP CONSTRAINT IF EXISTS nudges_kind_check;
+ALTER TABLE nudges
+  ADD CONSTRAINT nudges_kind_check
+    CHECK (kind IN ('upgrade', 'monthly_tally', 'session_close_guest', 'charge_heads_up', 'monthly_charge'));
+
 -- arrivals: one row per (user_or_guest, session) pair
 CREATE TABLE IF NOT EXISTS arrivals (
   id             UUID PRIMARY KEY DEFAULT gen_random_uuid(),
